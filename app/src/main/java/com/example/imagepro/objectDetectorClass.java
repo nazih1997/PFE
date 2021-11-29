@@ -85,7 +85,7 @@ public class objectDetectorClass {
     public Mat recognizeImage(Mat mat_image){
         // Rotate original image by 90 degree to get portrait frame
 
-        //to  prevent App Crash
+        // it prevent App crashing
 
 
         Mat rotated_mat_image=new Mat();
@@ -94,7 +94,6 @@ public class objectDetectorClass {
         Core.flip(a,rotated_mat_image,1);
         // Release mat
         a.release();
-
 
         // convert it to bitmap
         Bitmap bitmap=null;
@@ -111,7 +110,7 @@ public class objectDetectorClass {
         ByteBuffer byteBuffer=convertBitmapToByteBuffer(scaledBitmap);
 
         // defining output
-        // 1: 1 object detected
+        // 10: top 10 object detected
         // 4: there coordinate in image
         //  float[][][]result=new float[1][10][4];
         Object[] input=new Object[1];
@@ -119,15 +118,15 @@ public class objectDetectorClass {
 
         Map<Integer,Object> output_map=new TreeMap<>();
 
-        // we create treemap of three array (boxes,score,classes)
+       //we create treemap of three array (boxes,score,classes)
 
-        float[][][]boxes =new float[1][1][4];
-        // 1: top 1 object detected
-        // 4: their coordinate in image
-        float[][] scores=new float[1][1];
-        // store score of object
-        float[][] classes=new float[1][1];
-        // store class of object
+        float[][][]boxes =new float[1][10][4];
+        // 10: top 10 object detected
+        // 4: there coordinate in image
+        float[][] scores=new float[1][10];
+        // stores scores of 10 object
+        float[][] classes=new float[1][10];
+        // stores class of object
 
         // add it to object_map;
         output_map.put(0,boxes);
@@ -145,12 +144,14 @@ public class objectDetectorClass {
         Object score=output_map.get(2);
 
         // loop through each object
-
+        // as output has only 10 boxes
         for (int i=0;i<10;i++){
             float class_value=(float) Array.get(Array.get(Object_class,0),i);
             float score_value=(float) Array.get(Array.get(score,0),i);
             // define threshold for score
 
+            // change threshold according to your model
+            // and do some change to improve app
             if(score_value>0.5){
                 Object box1=Array.get(Array.get(value,0),i);
                 // we are multiplying it with Original height and width of frame
@@ -173,15 +174,14 @@ public class objectDetectorClass {
         Mat b=rotated_mat_image.t();
         Core.flip(b,mat_image,0);
         b.release();
-
         return mat_image;
     }
 
     private ByteBuffer convertBitmapToByteBuffer(Bitmap bitmap) {
         ByteBuffer byteBuffer;
-        // some model input should be quant=0  and for others quant=1
-        // for this quant=0
-        // Change quant=1
+        // some model input should be quant=0  for others quant=1
+        // this quant=0
+        // Change it quant=1
         // As we are scaling image from 0-255 to 0-1
         int quant=1;
         int size_images=INPUT_SIZE;
@@ -196,7 +196,7 @@ public class objectDetectorClass {
         bitmap.getPixels(intValues,0,bitmap.getWidth(),0,0,bitmap.getWidth(),bitmap.getHeight());
         int pixel=0;
 
-
+        //to prevent errors
         for (int i=0;i<size_images;++i){
             for (int j=0;j<size_images;++j){
                 final  int val=intValues[pixel++];
