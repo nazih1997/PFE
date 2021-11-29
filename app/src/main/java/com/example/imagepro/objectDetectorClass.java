@@ -111,7 +111,7 @@ public class objectDetectorClass {
         ByteBuffer byteBuffer=convertBitmapToByteBuffer(scaledBitmap);
 
         // defining output
-        // 10: top 10 object detected
+        // 1: 1 object detected
         // 4: there coordinate in image
         //  float[][][]result=new float[1][10][4];
         Object[] input=new Object[1];
