@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import org.opencv.android.OpenCVLoader;
-//third  activity it contains a button that will launch the next activity
+//third activity it contains a button that will launch the next activity
 
 public class ScanIDStart extends AppCompatActivity {
     static {

@@ -41,7 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 //Second activity where we detect face ,
 // make automatic captures of face when it is detected
-//and stock them
+//and save them on a folder called ImagePro
 
 public class CameraActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
     private static final String TAG = "CameraActivity";
@@ -214,6 +214,7 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
             CascadeClassifier.detectMultiScale(mRbg, faces, 1.1, 2, 2, new Size(absoluteFaceSize, absoluteFaceSize), new Size());
 
         }
+        //Draw a rectangle
         Rect[] facesArray = faces.toArray();
         for (int i = 0; i < facesArray.length; i++) {
             Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0, 255), 2);
@@ -227,9 +228,11 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
         return mRgba;
     }
 
+    //make capture if face detected
     private void take_picture_function_rgb(Mat mRgba) {
         Mat save_mat = new Mat();
         Imgproc.cvtColor(mRgba, save_mat, Imgproc.COLOR_RGBA2BGRA);
+        //Create a folder where we save the captures
         File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/ImagePro");
         boolean success = true;
         if (!folder.exists()) {
@@ -251,6 +254,7 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
 
 
             Intent intent = new Intent(CameraActivity.this, ScanIDStart.class);
+            //if we get 10 face capture on the folder,we move to the next activity
             if(numberOfFiles == 10){
                 startActivity(intent);
                 finish();

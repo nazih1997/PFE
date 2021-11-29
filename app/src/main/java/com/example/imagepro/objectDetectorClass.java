@@ -83,10 +83,10 @@ public class objectDetectorClass {
     }
     // create new Mat function
     public Mat recognizeImage(Mat mat_image){
-        // Rotate original image by 90 degree get get portrait frame
+        // Rotate original image by 90 degree to get portrait frame
 
-        // prevent App if it Keep Crashing
-        // it fix crashing problem of the app
+        //to  prevent App Crash
+
 
         Mat rotated_mat_image=new Mat();
 
@@ -95,7 +95,7 @@ public class objectDetectorClass {
         // Release mat
         a.release();
 
-        // if this process  not done i will get improper prediction, less no. of object
+
         // convert it to bitmap
         Bitmap bitmap=null;
         bitmap=Bitmap.createBitmap(rotated_mat_image.cols(),rotated_mat_image.rows(),Bitmap.Config.ARGB_8888);
@@ -118,27 +118,26 @@ public class objectDetectorClass {
         input[0]=byteBuffer;
 
         Map<Integer,Object> output_map=new TreeMap<>();
-        // we are not going to use this method of output
-        // instead we create treemap of three array (boxes,score,classes)
 
-        float[][][]boxes =new float[1][10][4];
-        // 10: top 10 object detected
-        // 4: there coordinate in image
-        float[][] scores=new float[1][10];
-        // stores scores of 10 object
-        float[][] classes=new float[1][10];
-        // stores class of object
+        // we create treemap of three array (boxes,score,classes)
+
+        float[][][]boxes =new float[1][1][4];
+        // 1: top 1 object detected
+        // 4: their coordinate in image
+        float[][] scores=new float[1][1];
+        // store score of object
+        float[][] classes=new float[1][1];
+        // store class of object
 
         // add it to object_map;
         output_map.put(0,boxes);
         output_map.put(1,classes);
         output_map.put(2,scores);
 
-        // now predict
+        // predict
         interpreter.runForMultipleInputsOutputs(input,output_map);
 
-        //      1. Loading tensorflow lite model
-        //      2. Predicting object
+
         // draw boxes and label it with it's name
 
         Object value=output_map.get(0);
@@ -146,14 +145,12 @@ public class objectDetectorClass {
         Object score=output_map.get(2);
 
         // loop through each object
-        // as output has only 10 boxes
+
         for (int i=0;i<10;i++){
             float class_value=(float) Array.get(Array.get(Object_class,0),i);
             float score_value=(float) Array.get(Array.get(score,0),i);
             // define threshold for score
 
-            // Here you can change threshold according to your model
-            // Now we will do some change to improve app
             if(score_value>0.5){
                 Object box1=Array.get(Array.get(value,0),i);
                 // we are multiplying it with Original height and width of frame
@@ -172,17 +169,17 @@ public class objectDetectorClass {
 
         }
         // select device and run
-        // Do same here
+
         Mat b=rotated_mat_image.t();
         Core.flip(b,mat_image,0);
         b.release();
-        // Now for second change go to CameraBridgeViewBase
+
         return mat_image;
     }
 
     private ByteBuffer convertBitmapToByteBuffer(Bitmap bitmap) {
         ByteBuffer byteBuffer;
-        // some model input should be quant=0  for some quant=1
+        // some model input should be quant=0  and for others quant=1
         // for this quant=0
         // Change quant=1
         // As we are scaling image from 0-255 to 0-1
@@ -199,8 +196,7 @@ public class objectDetectorClass {
         bitmap.getPixels(intValues,0,bitmap.getWidth(),0,0,bitmap.getWidth(),bitmap.getHeight());
         int pixel=0;
 
-        // some error
-        // run
+
         for (int i=0;i<size_images;++i){
             for (int j=0;j<size_images;++j){
                 final  int val=intValues[pixel++];

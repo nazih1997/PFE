@@ -78,6 +78,7 @@ public class ScanIDCard extends Activity implements CameraBridgeViewBase.CvCamer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         try {
             objectDetectorClass=new objectDetectorClass(getAssets(),"model.tflite","label.txt",320);
         } catch (IOException e) {
@@ -103,6 +104,7 @@ public class ScanIDCard extends Activity implements CameraBridgeViewBase.CvCamer
         try{
 
             // i train model on input size =320
+            //load model
 
             objectDetectorClass=new objectDetectorClass(getAssets(),"custom_model.tflite","custom_label.txt",320);
             Log.d("CardActivity","Model is successfully loaded");
@@ -159,11 +161,9 @@ public class ScanIDCard extends Activity implements CameraBridgeViewBase.CvCamer
         mRgba=inputFrame.rgba();
         mGray=inputFrame.gray();
 
-        //loading tensorflow lite model
-
         Mat out=new Mat();
 
-
+        //use the objectDetectorClass to detect
             out=objectDetectorClass.recognizeImage(mRgba);
 
 
